@@ -83,6 +83,7 @@ func openSession(cache cache.Cache) *Session {
 		nodePrioritizers: map[string][]priorities.PriorityConfig{},
 	}
 
+	// mark: 调度前, 将cache里的信息打个快照, 例如nodeInfo等, 防止在调度过程中数据发生变化.
 	snapshot := cache.Snapshot()
 
 	ssn.Jobs = snapshot.Jobs

@@ -337,6 +337,7 @@ func (ssn *Session) PredicateFn(task *api.TaskInfo, node *api.NodeInfo) error {
 			if !isEnabled(plugin.EnabledPredicate) {
 				continue
 			}
+			// mark: 啥时候设置的pfn??
 			pfn, found := ssn.predicateFns[plugin.Name]
 			if !found {
 				continue

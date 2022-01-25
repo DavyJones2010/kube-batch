@@ -71,6 +71,7 @@ func Run(opt *options.ServerOption) error {
 	}
 
 	// Start policy controller to allocate resources.
+	// mark: 调度入口, 新建调度器
 	sched, err := scheduler.NewScheduler(config,
 		opt.SchedulerName,
 		opt.SchedulerConf,
@@ -85,6 +86,7 @@ func Run(opt *options.ServerOption) error {
 		glog.Fatalf("Prometheus Http Server failed %s", http.ListenAndServe(opt.ListenAddress, nil))
 	}()
 
+	// mark: 调度入口, 启动调度器
 	run := func(ctx context.Context) {
 		sched.Run(ctx.Done())
 		<-ctx.Done()

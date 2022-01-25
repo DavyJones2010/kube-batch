@@ -70,6 +70,7 @@ func New(config *rest.Config, schedulerName string, defaultQueue string) Cache {
 }
 
 //SchedulerCache cache for the kube batch
+// mark: kube-batch里的schedulerCache结构与kube-scheduler的cache结构差别较大
 type SchedulerCache struct {
 	sync.Mutex
 
@@ -355,6 +356,7 @@ func newSchedulerCache(config *rest.Config, schedulerName string, defaultQueue s
 
 // Run  starts the schedulerCache
 func (sc *SchedulerCache) Run(stopCh <-chan struct{}) {
+	// httodo: 这里启动缓存, 会后台从apiserver一直同步数据么?
 	go sc.pdbInformer.Informer().Run(stopCh)
 	go sc.podInformer.Informer().Run(stopCh)
 	go sc.nodeInformer.Informer().Run(stopCh)

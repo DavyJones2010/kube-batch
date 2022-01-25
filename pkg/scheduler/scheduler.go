@@ -60,10 +60,12 @@ func NewScheduler(
 }
 
 // Run runs the Scheduler
+// mark: 启动scheduler
 func (pc *Scheduler) Run(stopCh <-chan struct{}) {
 	var err error
 
 	// Start cache for policy.
+	// mark: 与kube-scheduler相同, 第一步都是启动缓存, 等待从apiserver sync完成
 	go pc.cache.Run(stopCh)
 	pc.cache.WaitForCacheSync(stopCh)
 
@@ -91,9 +93,11 @@ func (pc *Scheduler) runOnce() {
 	defer glog.V(4).Infof("End scheduling ...")
 	defer metrics.UpdateE2eDuration(metrics.Duration(scheduleStartTime))
 
+	// mark: 调度前, 将node信息打个快照
 	ssn := framework.OpenSession(pc.cache, pc.plugins)
 	defer framework.CloseSession(ssn)
 
+	// mark: actions至少包含allocate, backfill这两个
 	for _, action := range pc.actions {
 		actionStartTime := time.Now()
 		action.Execute(ssn)

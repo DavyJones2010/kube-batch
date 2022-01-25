@@ -25,6 +25,7 @@ import (
 )
 
 // Resource struct defines all the resource type
+// mark: k8s统一的资源描述接口, 这里将原生的k8s的Resource进行了hack, 增加了 ScalarResources, MaxTaskNum 字段
 type Resource struct {
 	MilliCPU float64
 	Memory   float64

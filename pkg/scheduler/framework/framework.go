@@ -44,6 +44,7 @@ func OpenSession(cache cache.Cache, tiers []conf.Tier) *Session {
 
 	for _, plugin := range ssn.plugins {
 		onSessionOpenStart := time.Now()
+		// mark: 这里初始化session, 设置filter等函数体
 		plugin.OnSessionOpen(ssn)
 		metrics.UpdatePluginDuration(plugin.Name(), metrics.OnSessionOpen, metrics.Duration(onSessionOpenStart))
 	}

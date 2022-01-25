@@ -31,12 +31,14 @@ type proportionPlugin struct {
 	pluginArguments framework.Arguments
 }
 
+// httodo: 这里queue又代表啥?
 type queueAttr struct {
 	queueID api.QueueID
 	name    string
 	weight  int32
 	share   float64
 
+	// httodo: 这些字段分别代表啥意思?
 	deserved  *api.Resource
 	allocated *api.Resource
 	request   *api.Resource
@@ -55,9 +57,11 @@ func (pp *proportionPlugin) Name() string {
 	return "proportion"
 }
 
+// httodo: 这里proportionPlugin代表啥意思?
 func (pp *proportionPlugin) OnSessionOpen(ssn *framework.Session) {
 	// Prepare scheduling data for this session.
 	for _, n := range ssn.Nodes {
+		// httodo: 为啥这里totalResource要把所有node的allocatable资源都叠加在一起呢? 没意义啊.
 		pp.totalResource.Add(n.Allocatable)
 	}
 

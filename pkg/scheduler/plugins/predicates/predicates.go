@@ -120,7 +120,9 @@ func (pp *predicatesPlugin) OnSessionOpen(ssn *framework.Session) {
 
 	predicate := enablePredicate(pp.pluginArguments)
 
+	// mark: 在这里将predicatesFunctions加到snapshots, 主要是filter
 	ssn.AddPredicateFn(pp.Name(), func(task *api.TaskInfo, node *api.NodeInfo) error {
+		// mark: 重要! filter方法内容
 		nodeInfo := schedulernodeinfo.NewNodeInfo(node.Pods()...)
 		nodeInfo.SetNode(node.Node)
 
@@ -129,6 +131,7 @@ func (pp *predicatesPlugin) OnSessionOpen(ssn *framework.Session) {
 		}
 
 		// CheckNodeCondition Predicate
+		// mark: 校验node状态是否ok, 是否能调度
 		fit, reasons, err := predicates.CheckNodeConditionPredicate(task.Pod, nil, nodeInfo)
 		if err != nil {
 			return err
@@ -143,6 +146,7 @@ func (pp *predicatesPlugin) OnSessionOpen(ssn *framework.Session) {
 		}
 
 		// CheckNodeUnschedulable Predicate
+		// mark: 校验node上是否有taint, 以及pod是否容忍该taint等
 		fit, _, err = predicates.CheckNodeUnschedulablePredicate(task.Pod, nil, nodeInfo)
 		if err != nil {
 			return err
@@ -157,6 +161,7 @@ func (pp *predicatesPlugin) OnSessionOpen(ssn *framework.Session) {
 		}
 
 		// NodeSelector Predicate
+		// mark: pod的selector表达式, 以及pod与node的affinity表达式
 		fit, _, err = predicates.PodMatchNodeSelector(task.Pod, nil, nodeInfo)
 		if err != nil {
 			return err
